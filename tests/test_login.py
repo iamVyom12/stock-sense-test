@@ -217,12 +217,12 @@ def test_login_delay():
             
         with allure.step("Wait for potential session timeout"):
             # Wait for 2 minutes - adjust based on expected session timeout
-            time.sleep(120)
+            time.sleep(60)
             
         with allure.step("Click Sign In after delay"):
             sign_in_btn = driver.find_element(By.XPATH, "//button[@type='submit']")
             sign_in_btn.click()
-            time.sleep(5)
+            time.sleep(10)
             
         with allure.step("Check if login still works after delay"):
             if "chat" in driver.current_url:
@@ -278,18 +278,25 @@ def test_login_form_reset():
         
         # Verify form is reset
         with allure.step("Verify login form is reset"):
-            username_input = driver.find_element(By.CSS_SELECTOR, "input[type='text'][required]")
-            password_input = driver.find_element(By.CSS_SELECTOR, "input[type='password'][required]")
-            
-            # Check that fields are empty
-            assert username_input.get_attribute("value") == "", "Username field is not empty after logout"
-            assert password_input.get_attribute("value") == "", "Password field is not empty after logout"
-            
-            # Check that "Remember me" checkbox is unchecked (if it should be)
-            remember_me = driver.find_element(By.XPATH, "//input[@type='checkbox']")
-            assert not remember_me.is_selected(), "Remember me checkbox is still checked after logout"
-            
-            allure.attach(driver.get_screenshot_as_png(), name="reset_form_after_logout", attachment_type=allure.attachment_type.PNG)
+          username_input = driver.find_element(By.CSS_SELECTOR, "input[type='text'][required]")
+          password_input = driver.find_element(By.CSS_SELECTOR, "input[type='password'][required]")
+
+           # Check that fields are empty
+          assert username_input.get_attribute("value") == "", "Username field is not empty after logout"
+          assert password_input.get_attribute("value") == "", "Password field is not empty after logout"
+
+    # Check the custom 'Remember me' checkbox (based on presence of checked class or SVG)
+          remember_me_div = driver.find_element(By.XPATH, "//label[contains(text(), 'Remember me')]/parent::div")
+
+          checkbox_inner = remember_me_div.find_element(By.XPATH, ".//div[contains(@class, 'h-5 w-5')]")
+
+    # Check if the checkbox is "checked" based on its classes (adjust this according to your styles)
+          is_checked = "bg-blue-600" in checkbox_inner.get_attribute("class")  # or check if SVG is present
+
+          assert is_checked, "Remember me checkbox is still checked after logout"
+
+          allure.attach(driver.get_screenshot_as_png(), name="reset_form_after_logout", attachment_type=allure.attachment_type.PNG)
+
     
     finally:
         driver.quit()

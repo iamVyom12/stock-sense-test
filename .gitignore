@@ -18,3 +18,4 @@ allure-report/
 # IDE/editor folders
 .vscode/
 .idea/
+.env

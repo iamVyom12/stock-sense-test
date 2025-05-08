@@ -36,7 +36,7 @@ def pytest_configure(config):
         "Python Version": os.popen("python --version").read().strip(),
         "Test Run Date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "Bot API URL": "https://stocksense-backend.onrender.com/api",
-        "Tester": os.environ.get("USER", "unknown")
+        "Tester": "vyom"
     }
     
     with open(os.path.join("allure-results", "environment.properties"), 'w') as f:

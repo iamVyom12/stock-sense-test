@@ -17,16 +17,16 @@ def test_login_valid():
 
     try:
         with allure.step("Open login page"):
-            driver.get("https://stock-sense-fe.onrender.com")
+            driver.get("https://stock-sense-infodesk.onrender.com/")
             time.sleep(2)
 
         with allure.step("Enter valid username"):
             username_input = driver.find_elements(By.XPATH, "//label[contains(text(), 'Username')]/following-sibling::input")[0]
-            username_input.send_keys("not_tarang")
+            username_input.send_keys("vyom")
 
         with allure.step("Enter valid password"):
             password_input = driver.find_elements(By.XPATH, "//label[contains(text(), 'Password')]/following-sibling::input")[0]
-            password_input.send_keys("not_tarang@123")
+            password_input.send_keys("1234")
 
         with allure.step("Click Sign In"):
             sign_in_btn = driver.find_element(By.XPATH, "//button[@type='submit']")
@@ -53,16 +53,16 @@ def test_login_invalid():
 
     try:
         with allure.step("Open login page"):
-            driver.get("https://stock-sense-fe.onrender.com")
+            driver.get("https://stock-sense-infodesk.onrender.com/")
             time.sleep(2)
 
         with allure.step("Enter invalid username"):
             username_input = driver.find_elements(By.XPATH, "//label[contains(text(), 'Username')]/following-sibling::input")[0]
-            username_input.send_keys("vyom")
+            username_input.send_keys("aryan")
 
         with allure.step("Enter invalid password"):
             password_input = driver.find_elements(By.XPATH, "//label[contains(text(), 'Password')]/following-sibling::input")[0]
-            password_input.send_keys("vyom@1234")
+            password_input.send_keys("aryan@1234")
 
         with allure.step("Click Sign In"):
             sign_in_btn = driver.find_element(By.XPATH, "//button[@type='submit']")
@@ -88,7 +88,7 @@ def test_empty_username():
 
     try:
         with allure.step("Open login page"):
-            driver.get("https://stock-sense-fe.onrender.com")
+            driver.get("https://stock-sense-infodesk.onrender.com/")
             time.sleep(2)
             
         with allure.step("Fill password only"):
@@ -116,7 +116,7 @@ def test_empty_password():
 
     try:
         with allure.step("Open login page"):
-            driver.get("https://stock-sense-fe.onrender.com")
+            driver.get("https://stock-sense-infodesk.onrender.com/")
             time.sleep(2)
             
         with allure.step("Fill username only"):
@@ -144,7 +144,7 @@ def test_both_fields_empty():
 
     try:
         with allure.step("Open login page"):
-            driver.get("https://stock-sense-fe.onrender.com")
+            driver.get("https://stock-sense-infodesk.onrender.com/")
             time.sleep(2)
             
         with allure.step("Try to submit empty form"):
@@ -169,16 +169,16 @@ def test_login_sql_injection():
 
     try:
         with allure.step("Open login page"):
-            driver.get("https://stock-sense-fe.onrender.com")
+            driver.get("https://stock-sense-infodesk.onrender.com/")
             time.sleep(2)
 
         with allure.step("Enter SQL injection in username"):
             username_input = driver.find_elements(By.XPATH, "//label[contains(text(), 'Username')]/following-sibling::input")[0]
-            username_input.send_keys("' OR '1'='1")
+            username_input.send_keys("' OR '1'='1' -- ")
 
         with allure.step("Enter SQL injection in password"):
             password_input = driver.find_elements(By.XPATH, "//label[contains(text(), 'Password')]/following-sibling::input")[0]
-            password_input.send_keys("' OR '1'='1")
+            password_input.send_keys("' OR '1'='1' -- ")
 
         with allure.step("Click Sign In"):
             sign_in_btn = driver.find_element(By.XPATH, "//button[@type='submit']")
@@ -204,16 +204,16 @@ def test_login_delay():
 
     try:
         with allure.step("Open login page"):
-            driver.get("https://stock-sense-fe.onrender.com")
+            driver.get("https://stock-sense-infodesk.onrender.com/")
             time.sleep(2)
 
         with allure.step("Enter valid username"):
             username_input = driver.find_elements(By.XPATH, "//label[contains(text(), 'Username')]/following-sibling::input")[0]
-            username_input.send_keys("not_tarang")
+            username_input.send_keys("vyom")
 
         with allure.step("Enter valid password"):
             password_input = driver.find_elements(By.XPATH, "//label[contains(text(), 'Password')]/following-sibling::input")[0]
-            password_input.send_keys("not_tarang@123")
+            password_input.send_keys("1234")
             
         with allure.step("Wait for potential session timeout"):
             # Wait for 2 minutes - adjust based on expected session timeout
@@ -244,11 +244,11 @@ def test_login_form_reset():
     try:
         # Login first
         with allure.step("Login with valid credentials"):
-            driver.get("https://stock-sense-fe.onrender.com")
+            driver.get("https://stock-sense-infodesk.onrender.com/")
             username_input = driver.find_element(By.CSS_SELECTOR, "input[type='text'][required]")
             password_input = driver.find_element(By.CSS_SELECTOR, "input[type='password'][required]")
-            username_input.send_keys("not_tarang")
-            password_input.send_keys("not_tarang@123")
+            username_input.send_keys("vyom")
+            password_input.send_keys("1234")
             sign_in_btn = driver.find_element(By.XPATH, "//button[text()='Sign in']")
             sign_in_btn.click()
             
@@ -260,16 +260,21 @@ def test_login_form_reset():
         # Logout process
         with allure.step("Navigate back to login by logging out"):
             # First click on the user profile
-            user_profile = driver.find_element(By.XPATH, "//div[contains(@class, 'user-dropdown')]//div[contains(@class, 'cursor-pointer')]")
-            user_profile.click()
+            user_profile = driver.find_element(By.XPATH, "//div[@class='w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0']")
+            driver.execute_script("arguments[0].scrollIntoView(true);", user_profile)
+            driver.execute_script("arguments[0].click();", user_profile)
+
+            time.sleep(2)
             
             # Wait for logout button to appear
-            logout_button = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, "//button[contains(@class, 'text-red-600')]//span[text()='Logout']"))
+            logout_button = WebDriverWait(driver,2).until(
+                EC.element_to_be_clickable((By.XPATH, "//button[.//span[text()='Logout']]"))
             )
             
             # Click logout
-            logout_button.click()
+            driver.execute_script("arguments[0].click();", logout_button)
+
+            time.sleep(2)
             
             # Wait for redirect to login page
             WebDriverWait(driver, 10).until(
